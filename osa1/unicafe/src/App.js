@@ -13,14 +13,24 @@ const App = () => {
   const Header = () => <h1>give feedback</h1>
   const Button = (props) => <button onClick={props.handler}>{props.name}</button>
   const StatisticsHeader = () => <h1>statistics</h1>
-  const Statistics = (props) => {
-    return (
-      <>
-        <p>good {props.good}</p>
-        <p>neutral {props.neutral}</p>
-        <p>bad {props.bad}</p>
-      </>
-    )
+  const StatisticsLine = ({name, value, unit}) => <p>{name} {value} {unit}</p>
+  const Statistics = ({good, neutral, bad}) => {
+    const all = bad + good + neutral
+    const average = (1 * good + 0 * neutral + (-1) * bad) / all;
+    
+    if (all) {
+      return (
+        <>
+          <StatisticsLine name="good" value={good} />
+          <StatisticsLine name="neutral" value={neutral} />
+          <StatisticsLine name="bad" value={bad} />
+          <StatisticsLine name="all" value={all} />
+          <StatisticsLine name="average" value={average} />
+          <StatisticsLine name="positive" value={good / all} unit="%" />
+        </>
+      )
+    }
+    return <p>No feedback given</p>
   }
 
   return (
