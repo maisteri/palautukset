@@ -1,0 +1,9 @@
+note over selain:
+selaimen javascript renderöi uuden noten ja entiset notet näytölle
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over palvelin:
+Uusi note lähetetty ja tallennettu palvelimelle.
+end note
