@@ -1,4 +1,5 @@
 const PersonForm = (props) => {
+
   return (
     <form onSubmit={props.addEntry}>
       <div>
