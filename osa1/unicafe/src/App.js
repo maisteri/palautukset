@@ -35,7 +35,7 @@ const App = () => {
             <StatisticsLine name="bad" value={bad} />
             <StatisticsLine name="all" value={all} />
             <StatisticsLine name="average" value={average} />
-            <StatisticsLine name="positive" value={good / all} unit="%" />
+            <StatisticsLine name="positive" value={good / all * 100} unit="%" />
           </tbody>
         </table>
       )
