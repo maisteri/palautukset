@@ -60,19 +60,22 @@ const App = () => {
         .create(newNumberObject)
         .then(returnedNumber => {
           setPersons(persons.concat(returnedNumber))
+          notifyUser('Added ' + newName, 'success')
+        })
+        .catch(error => {
+          notifyUser(error.response.data.error, 'error')
         })
       
-      notifyUser('Added ' + newName, 'success')
       setNewName('')
       setNewNumber('')
     }
   }
 
   const handleDeleteEntry = (event) => {
-    const {name} = persons.find(person => person.id === Number(event.target.value))
+    const {name} = persons.find(person => person.id === event.target.value)
     if (window.confirm(`Delete ${name} ?`)) {
       personService.deleteEntry(event.target.value)
-      const rest = persons.filter(person => person.id !== Number(event.target.value))
+      const rest = persons.filter(person => person.id !== event.target.value)
       setPersons(rest)
       notifyUser('Deleted ' + name, 'success')
     }
