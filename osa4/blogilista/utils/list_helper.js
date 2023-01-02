@@ -92,10 +92,38 @@ const mostBlogs = (blogs) => {
   return mostBlogsAuthor
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return undefined
+
+  const authorDict = blogs.reduce((authors, blog) => {
+    if (blog.author in authors) {
+      authors[blog.author] += blog.likes
+      return authors
+    } else {
+      authors[blog.author] = blog.likes
+      return authors
+    }
+  }, {})
+
+  const mostLikesAuthor = {
+    author: '',
+    likes: 0
+  }
+
+  for (const author in authorDict) {
+    if (mostLikesAuthor.likes < authorDict[author]) {
+      mostLikesAuthor.author = author
+      mostLikesAuthor.likes = authorDict[author]
+    }
+  }
+  return mostLikesAuthor
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   blogList,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
