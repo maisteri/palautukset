@@ -93,6 +93,18 @@ describe('new blog add', () => {
 
 })
 
+describe('single blog delete', () => {
+
+  test('deleting a blog succeeds', async () => {
+    const response = await api.get('/api/blogs')
+    await api.delete(`/api/blogs/${response.body[0].id}`)
+      .expect(200)
+    const res = await api.get('/api/blogs')
+    expect(res.body).toHaveLength(5)
+
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
