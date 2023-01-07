@@ -11,12 +11,12 @@ beforeEach(async () => {
 })
 
 describe('get all blogs', () => {
-  
+
   test('number of returned blogs is 6', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(6)
   })
-  
+
   test('blog id field must be id, not _id', async () => {
     const response = await api.get('/api/blogs')
     response.body.forEach((blog) => {
@@ -27,7 +27,7 @@ describe('get all blogs', () => {
 })
 
 describe('new blog add', () => {
-  
+
   const newBlog = {
     title: 'new test blog',
     author: 'new author',
@@ -73,7 +73,7 @@ describe('new blog add', () => {
       author: 'new author',
       likes: 0
     }
-    
+
     const newBlogNoTitle = {
       url: 'test.url',
       author: 'new author',
@@ -84,7 +84,7 @@ describe('new blog add', () => {
       .post('/api/blogs/')
       .send(newBlogNoTitle)
       .expect(400)
-    
+
     await api
       .post('/api/blogs/')
       .send(newBlogNoUrl)
@@ -102,6 +102,22 @@ describe('single blog delete', () => {
     const res = await api.get('/api/blogs')
     expect(res.body).toHaveLength(5)
 
+  })
+})
+
+describe('single blog modification of likes', () => {
+
+  test('modifying the first blog likes by +19', async () => {
+    const response = await api.get('/api/blogs')
+    const oldTotalLikes = listHelper.totalLikes(response.body)
+    let blog = response.body[0]
+    blog = { ...blog, likes: blog.likes + 19 }
+
+    await api.put(`/api/blogs/${blog.id}`)
+      .send(blog)
+      .expect(200)
+    const res = await api.get('/api/blogs')
+    expect(listHelper.totalLikes(res.body)).toBe(oldTotalLikes + 19)
   })
 })
 
