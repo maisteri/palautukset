@@ -1,9 +1,15 @@
 const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: [true, 'username must be defined']
+  },
   passwordHash: String,
-  name: String,
+  name: {
+    type: String,
+    required: [true, 'name must be defined']
+  },
   notes:[
     {
       type: mongoose.Schema.Types.ObjectId,

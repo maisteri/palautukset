@@ -1,6 +1,7 @@
 const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+require('express-async-errors')
 
 usersRouter.get('/', async (request, response) => {
   const users = await User.find({})
@@ -9,6 +10,16 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
+
+  if (password.length < 3 || username.length < 3) {
+    return response.status(400).end('Password and username must be at least 3 characters.')
+  }
+
+  const users = await User.find({})
+  console.log(username, users.map(user => user.username))
+  if (users.map(user => user.username).includes(username)) {
+    return response.status(400).end('Username exists.')
+  }
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)

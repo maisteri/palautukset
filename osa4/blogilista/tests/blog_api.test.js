@@ -4,10 +4,18 @@ const Blog = require('../models/blog')
 const listHelper = require('../utils/list_helper')
 const app = require('../app')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
+
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(listHelper.blogList)
+
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ username: 'root', passwordHash, name: 'Root User' })
+  await user.save()
 })
 
 describe('get all blogs', () => {
@@ -120,6 +128,58 @@ describe('single blog modification of likes', () => {
     expect(listHelper.totalLikes(res.body)).toBe(oldTotalLikes + 19)
   })
 })
+
+describe('malformed users cant be created', () => {
+
+  test('password cant be less than 3 characters', async () => {
+    const newUser = {
+      username: 'test',
+      name: 'Testi Testi',
+      password: 'te',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const users = await User.find({})
+    const usernames = users.map(user => user.username)
+    expect(usernames).not.toContain(newUser.username)
+  })
+
+  test('username cant be less than 3 characters', async () => {
+    const newUser = {
+      username: 'te',
+      name: 'Testi Testi',
+      password: 'testtest',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const users = await User.find({})
+    const usernames = users.map(user => user.username)
+    expect(usernames).not.toContain(newUser.username)
+  })
+
+  test('username must be unique', async () => {
+    const newUser = {
+      username: 'root',
+      name: 'Testi Testi',
+      password: 'testtest',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+  })
+
+})
+
 
 afterAll(() => {
   mongoose.connection.close()
