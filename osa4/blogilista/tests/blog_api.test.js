@@ -13,7 +13,7 @@ beforeEach(async () => {
   await Blog.insertMany(listHelper.blogList)
 
   await User.deleteMany({})
-  const passwordHash = await bcrypt.hash('sekret', 10)
+  const passwordHash = await bcrypt.hash('password', 10)
   const user = new User({ username: 'root', passwordHash, name: 'Root User' })
   await user.save()
 })
@@ -55,6 +55,7 @@ describe('new blog add', () => {
     expect(response.body).toHaveLength(listHelper.blogList.length + 1)
     expect(response.body.map(blog => {
       delete blog.id
+      delete blog.user
       return blog
     })).toContainEqual(newBlog)
 
