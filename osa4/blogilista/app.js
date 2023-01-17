@@ -7,7 +7,7 @@ const logger = require('./utils/logger')
 const blogsRouter = require('./controllers/blogsRouter')
 const usersRouter = require('./controllers/usersRouter')
 const loginRouter = require('./controllers/login')
-const middleware = require('./utils/middleware')
+const { tokenExtractor, userExtractor, errorHandler } = require('./utils/middleware')
 require('express-async-errors')
 
 logger.info('connecting to', config.MONGODB_URI)
@@ -22,9 +22,10 @@ mongoose.connect(config.MONGODB_URI)
 
 app.use(cors())
 app.use(express.json())
+app.use(tokenExtractor)
 app.use('/api/login', loginRouter)
 app.use('/api/blogs', blogsRouter)
-app.use('/api/users', usersRouter)
-app.use(middleware.errorHandler)
+app.use('/api/users', userExtractor, usersRouter)
+app.use(errorHandler)
 
 module.exports = app
