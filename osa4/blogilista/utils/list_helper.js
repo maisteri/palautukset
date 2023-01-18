@@ -5,6 +5,7 @@ const blogList = [
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
     likes: 7,
+    user: '63c84a050935837c4c9036fc',
     __v: 0
   },
   {
@@ -13,6 +14,7 @@ const blogList = [
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 5,
+    user: '63c84a050935837c4c9036fc',
     __v: 0
   },
   {
@@ -21,6 +23,7 @@ const blogList = [
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12,
+    user: '63c84a050935837c4c9036fc',
     __v: 0
   },
   {
@@ -29,6 +32,7 @@ const blogList = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
     likes: 10,
+    user: '63c84a050935837c4c9036fc',
     __v: 0
   },
   {
@@ -37,6 +41,7 @@ const blogList = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
     likes: 0,
+    user: '63c84a050935837c4c9036fc',
     __v: 0
   },
   {
@@ -45,9 +50,12 @@ const blogList = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     likes: 2,
+    user: '63c84a050935837c4c9036fc',
     __v: 0
   }
 ]
+
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzYzg0YTA1MDkzNTgzN2M0YzkwMzZmYyIsImlhdCI6MTY3NDA3MDU5Mn0.ywj6OiXhlYFMAHqB0_sMef0BITvqgaF_WSgxtW_G8Mo'
 
 const dummy = (blogs) => {
   blogs
@@ -120,6 +128,7 @@ const mostLikes = (blogs) => {
 }
 
 module.exports = {
+  token,
   dummy,
   totalLikes,
   favoriteBlog,

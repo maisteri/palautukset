@@ -4,18 +4,25 @@ const Blog = require('../models/blog')
 const listHelper = require('../utils/list_helper')
 const app = require('../app')
 const api = supertest(app)
-const bcrypt = require('bcrypt')
+// const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(listHelper.blogList)
+  // const rootUser = await User.findOne({ username: 'root' })
+  // console.log(rootUser)
+  // await Blog.insertMany(listHelper.blogList.map(blog => {
+  //  const newBlog = { ...blog, user: rootUser._id }
+  //  return newBlog
+  //}))
 
-  await User.deleteMany({})
-  const passwordHash = await bcrypt.hash('password', 10)
-  const user = new User({ username: 'root', passwordHash, name: 'Root User' })
-  await user.save()
+  // await User.deleteMany({})
+  // const passwordHash = await bcrypt.hash('password', 10)
+  // const user = new User({ username: 'root', passwordHash, name: 'Root User' })
+  // await user.save()
+
 })
 
 describe('get all blogs', () => {
@@ -46,6 +53,7 @@ describe('new blog add', () => {
   test('adding a new blog succeeds', async () => {
     await api
       .post('/api/blogs/')
+      .set('Authorization', `Bearer ${listHelper.token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -61,6 +69,17 @@ describe('new blog add', () => {
 
   })
 
+  test('adding a new blog fails when no token', async () => {
+    await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(listHelper.blogList.length)
+  })
+
   test('likes defaults to 0 if not defined', async () => {
     const newBlog = {
       title: 'new test blog',
@@ -70,6 +89,7 @@ describe('new blog add', () => {
 
     await api
       .post('/api/blogs/')
+      .set('Authorization', `Bearer ${listHelper.token}`)
       .send(newBlog)
       .expect(201)
       .expect(res => 'likes' in res.body)
@@ -91,11 +111,13 @@ describe('new blog add', () => {
 
     await api
       .post('/api/blogs/')
+      .set('Authorization', `Bearer ${listHelper.token}`)
       .send(newBlogNoTitle)
       .expect(400)
 
     await api
       .post('/api/blogs/')
+      .set('Authorization', `Bearer ${listHelper.token}`)
       .send(newBlogNoUrl)
       .expect(400)
   })
@@ -106,7 +128,9 @@ describe('single blog delete', () => {
 
   test('deleting a blog succeeds', async () => {
     const response = await api.get('/api/blogs')
-    await api.delete(`/api/blogs/${response.body[0].id}`)
+    await api
+      .delete(`/api/blogs/${response.body[0].id}`)
+      .set('Authorization', `Bearer ${listHelper.token}`)
       .expect(200)
     const res = await api.get('/api/blogs')
     expect(res.body).toHaveLength(5)
@@ -117,13 +141,13 @@ describe('single blog delete', () => {
 describe('single blog modification of likes', () => {
 
   test('modifying the first blog likes by +19', async () => {
-    const response = await api.get('/api/blogs')
-    const oldTotalLikes = listHelper.totalLikes(response.body)
-    let blog = response.body[0]
-    blog = { ...blog, likes: blog.likes + 19 }
+    const oldTotalLikes = listHelper.totalLikes(listHelper.blogList)
+    let blog = listHelper.blogList[0]
 
-    await api.put(`/api/blogs/${blog.id}`)
-      .send(blog)
+    await api
+      .put(`/api/blogs/${blog._id}`)
+      .set('Authorization', `Bearer ${listHelper.token}`)
+      .send({ likes: blog.likes + 19 })
       .expect(200)
     const res = await api.get('/api/blogs')
     expect(listHelper.totalLikes(res.body)).toBe(oldTotalLikes + 19)
