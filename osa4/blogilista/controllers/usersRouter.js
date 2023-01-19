@@ -12,13 +12,13 @@ usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
   if (password.length < 3) {
-    return response.status(400).end('Password and username must be at least 3 characters.')
+    return response.status(400).json({ error: 'Password and username must be at least 3 characters.' })
   }
 
   const users = await User.find({})
   console.log(username, users.map(user => user.username))
   if (users.map(user => user.username).includes(username)) {
-    return response.status(400).end('Username exists.')
+    return response.status(400).json({ error: 'Username exists.' })
   }
 
   const saltRounds = 10

@@ -94,6 +94,7 @@ describe('new blog add', () => {
       .expect(201)
       .expect(res => 'likes' in res.body)
       .expect(res => res.body.likes === 0)
+      .expect('Content-Type', /application\/json/)
   })
 
   test('blog must include title and url', async () => {
@@ -114,12 +115,14 @@ describe('new blog add', () => {
       .set('Authorization', `Bearer ${listHelper.token}`)
       .send(newBlogNoTitle)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
 
     await api
       .post('/api/blogs/')
       .set('Authorization', `Bearer ${listHelper.token}`)
       .send(newBlogNoUrl)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
   })
 
 })
@@ -132,6 +135,7 @@ describe('single blog delete', () => {
       .delete(`/api/blogs/${response.body[0].id}`)
       .set('Authorization', `Bearer ${listHelper.token}`)
       .expect(200)
+      .expect('Content-Type', /application\/json/)
     const res = await api.get('/api/blogs')
     expect(res.body).toHaveLength(5)
 
@@ -149,6 +153,7 @@ describe('single blog modification of likes', () => {
       .set('Authorization', `Bearer ${listHelper.token}`)
       .send({ likes: blog.likes + 19 })
       .expect(200)
+      .expect('Content-Type', /application\/json/)
     const res = await api.get('/api/blogs')
     expect(listHelper.totalLikes(res.body)).toBe(oldTotalLikes + 19)
   })
@@ -167,6 +172,7 @@ describe('malformed users cant be created', () => {
       .post('/api/users')
       .send(newUser)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
 
     const users = await User.find({})
     const usernames = users.map(user => user.username)
@@ -184,6 +190,7 @@ describe('malformed users cant be created', () => {
       .post('/api/users')
       .send(newUser)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
 
     const users = await User.find({})
     const usernames = users.map(user => user.username)
@@ -201,6 +208,7 @@ describe('malformed users cant be created', () => {
       .post('/api/users')
       .send(newUser)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
   })
 
 })
