@@ -14,9 +14,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notificationMessage, setNotificationMessage] = useState('')
   const [notificationMessageType, setNotificationMessageType] = useState('')
   const [visible, setVisible] = useState(false)
@@ -30,8 +27,7 @@ const App = () => {
       }, 3000)
   }
   
-  const handleBlogCreation = async (event) => {
-    event.preventDefault()
+  const addBlog = async ({title, author, url}) => {
     try {
       const blog = await blogService.create({
         author,
@@ -43,9 +39,6 @@ const App = () => {
     } catch (exception) {
       notify(exception.response.data.error, 'error')
     }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
     setVisible(false)
   }
 
@@ -114,14 +107,7 @@ const App = () => {
             buttonLabel='new blog'
             visible={visible}
             setVisible={setVisible} >
-            <BlogCreate
-              handleBlogCreation={handleBlogCreation}
-              title={title}
-              setTitle={setTitle}
-              author={author}
-              setAuthor={setAuthor}
-              url={url}
-              setUrl={setUrl} />
+            <BlogCreate addBlog={addBlog} />
           </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
