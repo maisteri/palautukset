@@ -7,6 +7,7 @@ import LoggedIn from './components/LoggedIn'
 import BlogCreate from './components/BlogCreate'
 import Notification from './components/Notification'
 import './index.css'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,6 +19,7 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [notificationMessage, setNotificationMessage] = useState('')
   const [notificationMessageType, setNotificationMessageType] = useState('')
+  const [visible, setVisible] = useState(false)
   
   const notify = (message, type) => {
     setNotificationMessage(message)
@@ -44,6 +46,7 @@ const App = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    setVisible(false)
   }
 
   const handleLogin = async (event) => {
@@ -107,14 +110,19 @@ const App = () => {
           <LoggedIn 
             name={user.name}
             handleLogout={handleLogout} />
-          <BlogCreate
-            handleBlogCreation={handleBlogCreation}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl} />
+          <Togglable 
+            buttonLabel='new blog'
+            visible={visible}
+            setVisible={setVisible} >
+            <BlogCreate
+              handleBlogCreation={handleBlogCreation}
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              url={url}
+              setUrl={setUrl} />
+          </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
