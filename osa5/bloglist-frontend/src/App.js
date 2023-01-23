@@ -17,6 +17,8 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState('')
   const [notificationMessageType, setNotificationMessageType] = useState('')
   const [visible, setVisible] = useState(false)
+
+  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
   
   const notify = (message, type) => {
     setNotificationMessage(message)
@@ -27,13 +29,35 @@ const App = () => {
       }, 3000)
   }
   
+  const addLike = id => {
+    setBlogs(blogs.map(blog => {
+      if (blog.id === id) {
+        blog.likes += 1
+      }
+      return blog
+    }))
+  }
+
+  const removeBlog = async (id) => {
+    try {
+      const sure = window.confirm('Are you sure?')
+      if (sure) {
+        const blog = await blogService.remove(id)
+        setBlogs(blogs.filter( blog => blog.id !== id))
+        notify(`deleted a blog ${blog.title} by ${blog.author}!`, 'success')
+      }
+    } catch (exception) {
+      notify(exception.response.data.error, 'error')
+    }
+  }
+
   const addBlog = async ({title, author, url}) => {
     try {
       const blog = await blogService.create({
         author,
         title,
         url
-      }, user.token)
+      })
       setBlogs(blogs.concat(blog))
       notify(`a new blog ${title} by ${author} added!`, 'success')
     } catch (exception) {
@@ -47,6 +71,7 @@ const App = () => {
     try {
       const user = await loginService.login({username, password})
       setUser(user)
+      blogService.setToken(user.token)
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
       )
@@ -65,9 +90,11 @@ const App = () => {
   }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    const initializeBlogs = async () => {
+      const blogs = await blogService.getAll()
+      setBlogs(blogs) 
+    }
+    initializeBlogs()
   }, [])
 
   useEffect(() => {
@@ -75,6 +102,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
     
   }, [])
@@ -109,8 +137,12 @@ const App = () => {
             setVisible={setVisible} >
             <BlogCreate addBlog={addBlog} />
           </Togglable>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+          {sortedBlogs.map(blog =>
+            <Blog 
+              key={blog.id} 
+              blog={blog} 
+              addLike={addLike}
+              removeBlog={removeBlog} />
           )}
         </div>
       }
