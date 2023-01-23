@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 const BlogCreate = ({ addBlog }) => {
-  
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -17,7 +17,7 @@ const BlogCreate = ({ addBlog }) => {
     setAuthor('')
     setUrl('')
   }
-  
+
   return (
     <div>
       <h2>create new</h2>

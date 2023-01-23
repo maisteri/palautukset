@@ -19,16 +19,16 @@ const App = () => {
   const [visible, setVisible] = useState(false)
 
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
-  
+
   const notify = (message, type) => {
     setNotificationMessage(message)
     setNotificationMessageType(type)
-      setTimeout(() => {
-        setNotificationMessage('')
-        setNotificationMessageType('')
-      }, 3000)
+    setTimeout(() => {
+      setNotificationMessage('')
+      setNotificationMessageType('')
+    }, 3000)
   }
-  
+
   const addLike = id => {
     setBlogs(blogs.map(blog => {
       if (blog.id === id) {
@@ -51,7 +51,7 @@ const App = () => {
     }
   }
 
-  const addBlog = async ({title, author, url}) => {
+  const addBlog = async ({ title, author, url }) => {
     try {
       const blog = await blogService.create({
         author,
@@ -69,7 +69,7 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login({ username, password })
       setUser(user)
       blogService.setToken(user.token)
       window.localStorage.setItem(
@@ -80,11 +80,12 @@ const App = () => {
       console.log(exception)
       notify(exception.response.data.error, 'error')
     }
-      setPassword('')
-      setUsername('')
+    setPassword('')
+    setUsername('')
   }
 
   const handleLogout = (event) => {
+    event.preventDefault()
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
   }
@@ -92,7 +93,7 @@ const App = () => {
   useEffect(() => {
     const initializeBlogs = async () => {
       const blogs = await blogService.getAll()
-      setBlogs(blogs) 
+      setBlogs(blogs)
     }
     initializeBlogs()
   }, [])
@@ -104,18 +105,17 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-    
   }, [])
-  
+
   return (
     <div>
       { user === null
         ?
-        <div> 
-          <Notification 
-            message={notificationMessage} 
+        <div>
+          <Notification
+            message={notificationMessage}
             type={notificationMessageType} />
-          <Login 
+          <Login
             username={username}
             password={password}
             setUsername={setUsername}
@@ -125,22 +125,22 @@ const App = () => {
         :
         <div>
           <h2>blogs</h2>
-          <Notification 
-            message={notificationMessage} 
+          <Notification
+            message={notificationMessage}
             type={notificationMessageType} />
-          <LoggedIn 
+          <LoggedIn
             name={user.name}
             handleLogout={handleLogout} />
-          <Togglable 
+          <Togglable
             buttonLabel='new blog'
             visible={visible}
             setVisible={setVisible} >
             <BlogCreate addBlog={addBlog} />
           </Togglable>
           {sortedBlogs.map(blog =>
-            <Blog 
-              key={blog.id} 
-              blog={blog} 
+            <Blog
+              key={blog.id}
+              blog={blog}
               addLike={addLike}
               removeBlog={removeBlog} />
           )}

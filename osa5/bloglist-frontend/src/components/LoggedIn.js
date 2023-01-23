@@ -1,4 +1,4 @@
-const LoggedIn = ({name, handleLogout}) => {
+const LoggedIn = ({ name, handleLogout }) => {
   return (
     <div>
       <p>
