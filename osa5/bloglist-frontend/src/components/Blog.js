@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
 const Blog = ({ blog, addLike, removeBlog }) => {
 
@@ -12,14 +11,7 @@ const Blog = ({ blog, addLike, removeBlog }) => {
 
   const handleLike = event => {
     event.preventDefault()
-    blogService.update(blog.id, {
-      user: blog.user.id,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-      likes: blog.likes + 1
-    })
-    addLike(blog.id)
+    addLike(blog)
   }
   return (
     showAll
