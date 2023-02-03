@@ -16,7 +16,6 @@ usersRouter.post('/', async (request, response) => {
   }
 
   const users = await User.find({})
-  console.log(username, users.map(user => user.username))
   if (users.map(user => user.username).includes(username)) {
     return response.status(400).json({ error: 'Username exists.' })
   }

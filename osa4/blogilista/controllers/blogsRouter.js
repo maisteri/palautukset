@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
 const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', (request, response) => {
@@ -13,19 +12,19 @@ blogsRouter.get('/', (request, response) => {
 })
 
 blogsRouter.post('/', userExtractor, (request, response, next) => {
-  let tempBlog = request.body
-  if ( !('likes' in tempBlog) ) {
-    tempBlog = { ...tempBlog, likes: 0 }
+  let blog = request.body
+  if ( !('likes' in blog) ) {
+    blog = { ...blog, likes: 0 }
   }
-
-  User.findById(request.user)
-    .then( result => {
-      tempBlog = { ...tempBlog, user: result._id }
-      const blog = new Blog(tempBlog)
-      blog
-        .save()
-        .then(result => {
-          response.status(201).json(result)
+  blog = { ...blog, user: request.user }
+  const newBlog = new Blog(blog)
+  newBlog
+    .save()
+    .then(result => {
+      Blog.findById(result._id)
+        .populate('user')
+        .then(newBlog => {
+          response.status(201).json(newBlog)
         })
         .catch(error => next(error))
     })
