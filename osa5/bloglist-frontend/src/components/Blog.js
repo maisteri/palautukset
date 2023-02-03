@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, addLike, removeBlog }) => {
+const Blog = ({ blog, addLike, removeBlog, creatorLoggedIn }) => {
 
   const [showAll, setShowAll] = useState(false)
 
@@ -18,15 +18,24 @@ const Blog = ({ blog, addLike, removeBlog }) => {
       ?
       <div className="blogStyle">
         {blog.title}, {blog.author}
-        <button onClick={() => setShowAll(false)}>hide</button><br />
+        <button id='hideButton' onClick={() => setShowAll(false)}>hide</button><br />
         {blog.url}<br />
-        likes {blog.likes} <button onClick={handleLike}>like</button><br />
+        likes {blog.likes} <button id='likeButton' onClick={handleLike}>like</button><br />
         {blog.user.name}<br />
-        <button className='btn-delete' onClick={handleDelete}>remove</button>
+        <button
+          style={{ display: creatorLoggedIn ? 'inline' : 'none' }}
+          className='btn-delete'
+          onClick={handleDelete}>
+          remove
+        </button>
       </div>
       :
       <div className="blogStyle">
-        <button className='btn' onClick={() => setShowAll(true)}>{blog.title}, {blog.author}</button>
+        <button
+          id='blogInfoButton'
+          className='btn blog'
+          onClick={() => setShowAll(true)}>{blog.title}, {blog.author}
+        </button>
       </div>
   )}
 

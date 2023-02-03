@@ -25,6 +25,7 @@ const BlogCreate = ({ addBlog }) => {
         <div>
           title:
           <input
+            id='title'
             type="text"
             value={title}
             name="Blog title"
@@ -35,6 +36,7 @@ const BlogCreate = ({ addBlog }) => {
         <div>
           author:
           <input
+            id='author'
             type="text"
             value={author}
             name="Blog author"
@@ -45,6 +47,7 @@ const BlogCreate = ({ addBlog }) => {
         <div>
           url:
           <input
+            id='url'
             type="text"
             value={url}
             name="Blog url"
@@ -52,7 +55,7 @@ const BlogCreate = ({ addBlog }) => {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type="submit">create</button>
+        <button id='createButton' type="submit">create</button>
       </form>
     </div>
   )

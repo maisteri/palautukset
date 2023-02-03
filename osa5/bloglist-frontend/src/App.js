@@ -84,7 +84,6 @@ const App = () => {
       )
       notify(`Nice to see you again ${user.name}!`, 'success')
     } catch (exception) {
-      console.log(exception)
       notify(exception.response.data.error, 'error')
     }
     setPassword('')
@@ -146,6 +145,7 @@ const App = () => {
           </Togglable>
           {sortedBlogs.map(blog =>
             <Blog
+              creatorLoggedIn={blog.user.username === user.username}
               key={blog.id}
               blog={blog}
               addLike={addLike}
