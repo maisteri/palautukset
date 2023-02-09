@@ -1,8 +1,10 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setFilter } from '../reducers/filterReducer' 
 
 const Filter = () => {
   const dispatch = useDispatch()
+  const notification = useSelector(state => state.notification)
+  const filter = useSelector(state => state.filter)
   const handleChange = (event) => {
     dispatch(setFilter(event.target.value))
   }
@@ -11,9 +13,13 @@ const Filter = () => {
   }
 
   return (
-    <div style={style}>
-      filter <input onChange={handleChange} />
-    </div>
+    notification ?
+      <div></div>
+      :
+      <div style={style}>
+        filter
+        <input value={filter} onChange={handleChange} />
+      </div>
   )
 }
 
