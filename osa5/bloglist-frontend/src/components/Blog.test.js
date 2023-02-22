@@ -10,16 +10,14 @@ const blog = {
   author: 'Michael Chan',
   url: 'https://reactpatterns.com/',
   likes: 7,
-  user: '63c84a050935837c4c9036fc'
+  user: '63c84a050935837c4c9036fc',
 }
 
 describe('tests for <Blog />', () => {
-
   test('renders content', () => {
     render(<Blog blog={blog} />)
     screen.getByText(`${blog.title}, ${blog.author}`)
   })
-
 
   test('clicking _the_ button makes url and likes visible', async () => {
     render(<Blog blog={blog} />)
@@ -29,7 +27,6 @@ describe('tests for <Blog />', () => {
     screen.getByText(blog.url, { exact: false })
     screen.getByText(`likes ${blog.likes}`, { exact: false })
   })
-
 
   test('clicking the like button calls likeHandler twice', async () => {
     const mockLikesHandler = jest.fn()
@@ -44,5 +41,4 @@ describe('tests for <Blog />', () => {
     await user.click(likeButton)
     expect(mockLikesHandler.mock.calls).toHaveLength(2)
   })
-
 })

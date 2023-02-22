@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types'
 
 const Togglable = (props) => {
-
   Togglable.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
     visible: PropTypes.bool.isRequired,
-    setVisible: PropTypes.func.isRequired
+    setVisible: PropTypes.func.isRequired,
   }
 
   const hideWhenVisible = { display: props.visible ? 'none' : '' }

@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 const blog = {
   title: 'React patterns',
   author: 'Michael Chan',
-  url: 'https://reactpatterns.com/'
+  url: 'https://reactpatterns.com/',
 }
 
 test('<BlogCreate /> calls submit once and handler blog content is correct', async () => {

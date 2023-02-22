@@ -35,14 +35,16 @@ const App = () => {
       author: blog.author,
       title: blog.title,
       url: blog.url,
-      likes: blog.likes + 1
+      likes: blog.likes + 1,
     })
-    setBlogs(blogs.map(entry => {
-      if (entry.id === blog.id) {
-        entry.likes += 1
-      }
-      return entry
-    }))
+    setBlogs(
+      blogs.map((entry) => {
+        if (entry.id === blog.id) {
+          entry.likes += 1
+        }
+        return entry
+      })
+    )
   }
 
   const removeBlog = async (id) => {
@@ -50,7 +52,7 @@ const App = () => {
       const sure = window.confirm('Are you sure?')
       if (sure) {
         const blog = await blogService.remove(id)
-        setBlogs(blogs.filter( blog => blog.id !== id))
+        setBlogs(blogs.filter((blog) => blog.id !== id))
         notify(`deleted a blog ${blog.title} by ${blog.author}!`, 'success')
       }
     } catch (exception) {
@@ -63,7 +65,7 @@ const App = () => {
       const blog = await blogService.create({
         author,
         title,
-        url
+        url,
       })
       setBlogs(blogs.concat(blog))
       notify(`a new blog ${title} by ${author} added!`, 'success')
@@ -79,9 +81,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
       setUser(user)
       blogService.setToken(user.token)
-      window.localStorage.setItem(
-        'loggedBlogAppUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       notify(`Nice to see you again ${user.name}!`, 'success')
     } catch (exception) {
       notify(exception.response.data.error, 'error')
@@ -115,44 +115,46 @@ const App = () => {
 
   return (
     <div>
-      { user === null
-        ?
+      {user === null ? (
         <div>
           <Notification
             message={notificationMessage}
-            type={notificationMessageType} />
+            type={notificationMessageType}
+          />
           <Login
             username={username}
             password={password}
             setUsername={setUsername}
             setPassword={setPassword}
-            handleLogin={handleLogin} />
+            handleLogin={handleLogin}
+          />
         </div>
-        :
+      ) : (
         <div>
           <h2>blogs</h2>
           <Notification
             message={notificationMessage}
-            type={notificationMessageType} />
-          <LoggedIn
-            name={user.name}
-            handleLogout={handleLogout} />
+            type={notificationMessageType}
+          />
+          <LoggedIn name={user.name} handleLogout={handleLogout} />
           <Togglable
-            buttonLabel='new blog'
+            buttonLabel="new blog"
             visible={visible}
-            setVisible={setVisible} >
+            setVisible={setVisible}
+          >
             <BlogCreate addBlog={addBlog} />
           </Togglable>
-          {sortedBlogs.map(blog =>
+          {sortedBlogs.map((blog) => (
             <Blog
               creatorLoggedIn={blog.user.username === user.username}
               key={blog.id}
               blog={blog}
               addLike={addLike}
-              removeBlog={removeBlog} />
-          )}
+              removeBlog={removeBlog}
+            />
+          ))}
         </div>
-      }
+      )}
     </div>
   )
 }

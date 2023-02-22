@@ -36,7 +36,7 @@
 .btn-delete {
   align-items: center;
   appearance: button;
-  background-color: #0276FF;
+  background-color: #0276ff;
   border-radius: 8px;
   border-style: none;
   box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
@@ -46,23 +46,24 @@
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
-  font-family: "RM Neue",sans-serif;
+  font-family: 'RM Neue', sans-serif;
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
   padding: 10px 21px;
   text-align: center;
   text-transform: none;
-  transition: color .13s ease-in-out,background .13s ease-in-out,opacity .13s ease-in-out,box-shadow .13s ease-in-out;
+  transition: color 0.13s ease-in-out, background 0.13s ease-in-out,
+    opacity 0.13s ease-in-out, box-shadow 0.13s ease-in-out;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
 }
 
 .btn-delete:active {
-  background-color: #006AE8;
+  background-color: #006ae8;
 }
 
 .btn-delete:hover {
-  background-color: #1C84FF;
+  background-color: #1c84ff;
 }
