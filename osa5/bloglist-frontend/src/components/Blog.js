@@ -1,11 +1,14 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { deleteBlog } from '../reducers/blogsReducer'
 
-const Blog = ({ blog, addLike, removeBlog, creatorLoggedIn }) => {
+const Blog = ({ blog, addLike, creatorLoggedIn }) => {
   const [showAll, setShowAll] = useState(false)
+  const dispatch = useDispatch()
 
   const handleDelete = (event) => {
     event.preventDefault()
-    removeBlog(blog.id)
+    dispatch(deleteBlog(blog.id))
   }
 
   const handleLike = (event) => {
