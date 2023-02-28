@@ -1,10 +1,21 @@
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../reducers/userReducer'
+
 const Login = ({
   username,
   setUsername,
   password,
-  setPassword,
-  handleLogin,
+  setPassword
 }) => {
+  const dispatch = useDispatch()
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    dispatch(loginUser({username, password}))
+    setPassword('')
+    setUsername('')
+  }
+
   return (
     <form onSubmit={handleLogin}>
       <div>

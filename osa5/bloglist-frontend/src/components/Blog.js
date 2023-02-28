@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { deleteBlog } from '../reducers/blogsReducer'
+import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
 
-const Blog = ({ blog, addLike, creatorLoggedIn }) => {
+const Blog = ({ blog, creatorLoggedIn }) => {
   const [showAll, setShowAll] = useState(false)
   const dispatch = useDispatch()
 
@@ -13,7 +13,7 @@ const Blog = ({ blog, addLike, creatorLoggedIn }) => {
 
   const handleLike = (event) => {
     event.preventDefault()
-    addLike(blog)
+    dispatch(likeBlog(blog.id))
   }
   return showAll ? (
     <div className="blogStyle">
