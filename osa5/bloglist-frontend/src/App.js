@@ -1,28 +1,26 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import { useEffect } from 'react'
+import Users from './components/Users'
+import User from './components/User'
 import Login from './components/Login'
-import LoggedIn from './components/LoggedIn'
-import BlogCreate from './components/BlogCreate'
+import Menu from './components/Menu'
 import Notification from './components/Notification'
-import './index.css'
-import Togglable from './components/Togglable'
-import { useDispatch, useSelector } from 'react-redux'
+import Bloglist from './components/Bloglist'
+import Blog from './components/Blog'
 import { initiateBlogs } from './reducers/blogsReducer'
 import { initiateUser } from './reducers/userReducer'
+import { initiateAllUsers } from './reducers/allUsersReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import './index.css'
 
 const App = () => {
-  
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [visible, setVisible] = useState(false)
-
   const dispatch = useDispatch()
-  const sortedBlogs = useSelector((state) => state.blogs)
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
   useEffect(() => {
     dispatch(initiateBlogs())
     dispatch(initiateUser())
+    dispatch(initiateAllUsers())
   }, [dispatch])
 
   return (
@@ -30,32 +28,20 @@ const App = () => {
       {!user ? (
         <div>
           <Notification />
-          <Login
-            username={username}
-            password={password}
-            setUsername={setUsername}
-            setPassword={setPassword}
-          />
+          <Login />
         </div>
       ) : (
         <div>
-          <h2>blogs</h2>
+          <Menu loggedIn={user.name} />
           <Notification />
-          <LoggedIn name={user.name} />
-          <Togglable
-            buttonLabel="new blog"
-            visible={visible}
-            setVisible={setVisible}
-          >
-            <BlogCreate setVisible={setVisible} />
-          </Togglable>
-          {sortedBlogs.map((blog) => (
-            <Blog
-              creatorLoggedIn={blog.user.username === user.username}
-              key={blog.id}
-              blog={blog}
-            />
-          ))}
+          <h2>blog app</h2>
+          <Routes>
+            <Route path="/blogs/:id" element={<Blog />} />
+            <Route path="/users/:id" element={<User />} />
+            <Route path="/blogs" element={<Bloglist />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/" element={<Navigate replace to="/blogs" />} />
+          </Routes>
         </div>
       )}
     </div>

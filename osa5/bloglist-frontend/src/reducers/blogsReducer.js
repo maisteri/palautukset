@@ -36,11 +36,11 @@ export const initiateBlogs = () => {
 export const likeBlog = (id) => {
   return async (dispatch, getState) => {
     const blogs = getState().blogs
-    const likedBlog = blogs.find(blog => blog.id === id)
-    const modifiedBlog = {...likedBlog, likes: likedBlog.likes + 1}
-    const newBlogs = blogs.map(blog => blog.id === id ? modifiedBlog : blog)
+    const likedBlog = blogs.find((blog) => blog.id === id)
+    const modifiedBlog = { ...likedBlog, likes: likedBlog.likes + 1 }
+    const newBlogs = blogs.map((blog) => (blog.id === id ? modifiedBlog : blog))
     dispatch(setBlogs(newBlogs))
-    await blogService.update(id, {likes: modifiedBlog.likes})
+    await blogService.update(id, { likes: modifiedBlog.likes })
   }
 }
 

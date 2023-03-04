@@ -1,10 +1,20 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useMatch } from 'react-router-dom'
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
 
-const Blog = ({ blog, creatorLoggedIn }) => {
-  const [showAll, setShowAll] = useState(false)
+const Blog = (props) => {
+  const thisBlogId = useMatch('/blogs/:id').params.id
+  const blog = useSelector((state) =>
+    state.blogs.find((blog) => blog.id === thisBlogId)
+  )
+  const user = useSelector((state) => state.user)
+
   const dispatch = useDispatch()
+
+  if (!user || !blog) {
+    return null
+  }
+  const creatorLoggedIn = user.username === blog.user.username
 
   const handleDelete = (event) => {
     event.preventDefault()
@@ -15,38 +25,28 @@ const Blog = ({ blog, creatorLoggedIn }) => {
     event.preventDefault()
     dispatch(likeBlog(blog.id))
   }
-  return showAll ? (
-    <div className="blogStyle">
-      {blog.title}, {blog.author}
-      <button id="hideButton" onClick={() => setShowAll(false)}>
-        hide
-      </button>
-      <br />
-      {blog.url}
-      <br />
-      likes {blog.likes}{' '}
-      <button id="likeButton" onClick={handleLike}>
-        like
-      </button>
-      <br />
-      {blog.user.name}
-      <br />
+
+  return (
+    <div>
+      <h2>
+        {blog.title}, {blog.author}
+      </h2>
+      <div>
+        <a href={blog.url}>{blog.url}</a>
+      </div>
+      <div>
+        {blog.likes} likes{' '}
+        <button id="likeButton" onClick={handleLike}>
+          like
+        </button>
+      </div>
+      <div>{blog.user.name}</div>
       <button
         style={{ display: creatorLoggedIn ? 'inline' : 'none' }}
         className="btn-delete"
         onClick={handleDelete}
       >
         remove
-      </button>
-    </div>
-  ) : (
-    <div className="blogStyle">
-      <button
-        id="blogInfoButton"
-        className="btn blog"
-        onClick={() => setShowAll(true)}
-      >
-        {blog.title}, {blog.author}
       </button>
     </div>
   )
