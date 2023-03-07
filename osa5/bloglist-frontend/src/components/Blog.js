@@ -1,8 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useMatch } from 'react-router-dom'
+import { useMatch, useNavigate } from 'react-router-dom'
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
+import Comments from './Comments'
 
 const Blog = (props) => {
+  const navigate = useNavigate()
   const thisBlogId = useMatch('/blogs/:id').params.id
   const blog = useSelector((state) =>
     state.blogs.find((blog) => blog.id === thisBlogId)
@@ -19,6 +21,7 @@ const Blog = (props) => {
   const handleDelete = (event) => {
     event.preventDefault()
     dispatch(deleteBlog(blog.id))
+    navigate('/blogs')
   }
 
   const handleLike = (event) => {
@@ -48,6 +51,7 @@ const Blog = (props) => {
       >
         remove
       </button>
+      <Comments comments={blog.comments} id={blog.id} />
     </div>
   )
 }

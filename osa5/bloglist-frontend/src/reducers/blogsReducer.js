@@ -33,6 +33,20 @@ export const initiateBlogs = () => {
   }
 }
 
+export const commentBlog = (id, comment) => {
+  return async (dispatch, getState) => {
+    const blogs = getState().blogs
+    const commentedBlog = blogs.find((blog) => blog.id === id)
+    const modifiedBlog = {
+      ...commentedBlog,
+      comments: commentedBlog.comments.concat(comment),
+    }
+    const newBlogs = blogs.map((blog) => (blog.id === id ? modifiedBlog : blog))
+    dispatch(setBlogs(newBlogs))
+    await blogService.createComment(id, { comments: modifiedBlog.comments })
+  }
+}
+
 export const likeBlog = (id) => {
   return async (dispatch, getState) => {
     const blogs = getState().blogs
