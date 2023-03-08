@@ -1,6 +1,9 @@
 import { useDispatch } from 'react-redux'
 import { setUser } from '../reducers/userReducer'
 import { Link } from 'react-router-dom'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import Container from 'react-bootstrap/Container'
 
 const Menu = ({ loggedIn }) => {
   const dispatch = useDispatch()
@@ -11,20 +14,17 @@ const Menu = ({ loggedIn }) => {
     dispatch(setUser(null))
   }
 
-  const padding = {
-    paddingRight: 5,
-  }
-
   return (
-    <div>
-      <Link to="/blogs" style={padding}>
-        blogs
-      </Link>
-      <Link to="/users" style={padding}>
-        users
-      </Link>
-      {loggedIn} logged in <button onClick={handleLogout}>Logout</button>
-    </div>
+    <Navbar bg="dark" variant="dark" className="mb-5">
+      <Container>
+        <Navbar.Brand href="/">blog app</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href="/blogs">blogs</Nav.Link>
+          <Nav.Link href="/users">users</Nav.Link>
+        </Nav>
+        {loggedIn} logged in <button onClick={handleLogout}>Logout</button>
+      </Container>
+    </Navbar>
   )
 }
 

@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useMatch, useNavigate } from 'react-router-dom'
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
 import Comments from './Comments'
+import Button from 'react-bootstrap/Button'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 const Blog = (props) => {
   const navigate = useNavigate()
@@ -30,29 +32,29 @@ const Blog = (props) => {
   }
 
   return (
-    <div>
-      <h2>
+    <ListGroup>
+      <ListGroup.Item>
         {blog.title}, {blog.author}
-      </h2>
-      <div>
+      </ListGroup.Item>
+      <ListGroup.Item>
         <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div>
+      </ListGroup.Item>
+      <ListGroup.Item>
         {blog.likes} likes{' '}
-        <button id="likeButton" onClick={handleLike}>
+        <Button id="likeButton" size="sms" onClick={handleLike}>
           like
-        </button>
-      </div>
-      <div>{blog.user.name}</div>
-      <button
-        style={{ display: creatorLoggedIn ? 'inline' : 'none' }}
-        className="btn-delete"
-        onClick={handleDelete}
-      >
-        remove
-      </button>
-      <Comments comments={blog.comments} id={blog.id} />
-    </div>
+        </Button>
+      </ListGroup.Item>
+      <ListGroup.Item>{blog.user.name}</ListGroup.Item>
+      <ListGroup.Item style={{ display: creatorLoggedIn ? 'inline' : 'none' }}>
+        <Button variant="danger" onClick={handleDelete}>
+          remove
+        </Button>
+      </ListGroup.Item>
+      <ListGroup.Item>
+        <Comments comments={blog.comments} id={blog.id} />
+      </ListGroup.Item>
+    </ListGroup>
   )
 }
 

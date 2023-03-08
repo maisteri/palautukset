@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import Button from 'react-bootstrap/esm/Button'
 
 const Togglable = (props) => {
   Togglable.propTypes = {
@@ -17,7 +18,7 @@ const Togglable = (props) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <Button onClick={toggleVisibility}>{props.buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}

@@ -24,7 +24,7 @@ const App = () => {
   }, [dispatch])
 
   return (
-    <div>
+    <div className="container">
       {!user ? (
         <div>
           <Notification />
@@ -34,7 +34,7 @@ const App = () => {
         <div>
           <Menu loggedIn={user.name} />
           <Notification />
-          <h2>blog app</h2>
+          {/* <h2 className="mb-3 mt-4">blog app</h2> */}
           <Routes>
             <Route path="/blogs/:id" element={<Blog />} />
             <Route path="/users/:id" element={<User />} />

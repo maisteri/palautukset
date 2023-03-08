@@ -1,4 +1,4 @@
-import Blog from './Blog'
+import ListGroup from 'react-bootstrap/ListGroup'
 import { useSelector } from 'react-redux'
 import Togglable from './Togglable'
 import { useState } from 'react'
@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom'
 const Bloglist = (props) => {
   const [visible, setVisible] = useState(false)
   const sortedBlogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.user)
 
   return (
     <>
@@ -19,15 +18,17 @@ const Bloglist = (props) => {
       >
         <BlogCreate setVisible={setVisible} />
       </Togglable>
-      {sortedBlogs.map((blog) => {
-        return (
-          <div className="blogStyle">
-            <Link to={`/blogs/${blog.id}`}>
-              {blog.title}, {blog.author}
-            </Link>
-          </div>
-        )
-      })}
+      <ListGroup variant="flush" className="pt-2">
+        {sortedBlogs.map((blog) => {
+          return (
+            <ListGroup.Item>
+              <Link to={`/blogs/${blog.id}`}>
+                {blog.title}, {blog.author}
+              </Link>
+            </ListGroup.Item>
+          )
+        })}
+      </ListGroup>
     </>
   )
 }
