@@ -30,7 +30,9 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <ChangeBook authors={authors} />
+      {!props.token ? null : (
+        <ChangeBook authors={authors} token={props.token} />
+      )}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { EDIT_AUTHOR, ALL_BOOKS } from '../queries'
 import { useMutation } from '@apollo/client'
 
 const ChangeBook = ({ authors }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState(authors[0].name)
   const [born, setBorn] = useState('')
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_BOOKS }],
