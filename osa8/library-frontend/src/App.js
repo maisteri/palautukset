@@ -4,8 +4,9 @@ import NewBook from './components/NewBook'
 import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import LoginForm from './components/LoginForm'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Recommendations from './components/Recommendations'
+import { BOOK_ADDED, GENRE_BOOKS, ALL_AUTHORS } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -15,6 +16,38 @@ const App = () => {
   useEffect(() => {
     setToken(localStorage.getItem('books-user-token'))
   }, [setToken])
+
+  // const cacheData = client.cache.extract()
+  // console.log(cacheData)
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const bookAdded = data.data.bookAdded
+      const authorAdded = data.data.bookAdded.author
+      window.alert(`a new book ${bookAdded.title} added`)
+
+      const variables = { genre: '' }
+
+      client.cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+        const authorAlreadyInList = allAuthors
+          .map((a) => a.name)
+          .some((name) => name === authorAdded.name)
+        if (authorAlreadyInList) return { allAuthors }
+        return {
+          allAuthors: allAuthors.concat(authorAdded),
+        }
+      })
+
+      client.cache.updateQuery(
+        { query: GENRE_BOOKS, variables },
+        ({ allBooks }) => {
+          return {
+            allBooks: allBooks.concat(bookAdded),
+          }
+        }
+      )
+    },
+  })
 
   const logout = () => {
     setToken(null)
