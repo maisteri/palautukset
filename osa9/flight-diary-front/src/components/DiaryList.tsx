@@ -3,7 +3,7 @@ import { NonSensitiveDiaryEntry } from '../types';
 const DiaryList = ({ diaries }: { diaries: NonSensitiveDiaryEntry[] }) => {
   return (
     <div>
-      <h1>Diary Entries</h1>
+      <h2>Diary Entries</h2>
       {diaries.map((diary) => (
         <div key={diary.id}>
           <div>
