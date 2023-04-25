@@ -1,14 +1,9 @@
 import diagnosesData from '../../data/diagnoses';
 import patientData from '../../data/patients';
-import {
-  Diagnose,
-  NonSensitiveDataPatient,
-  Patient,
-  newPatient,
-} from '../types';
+import { Diagnosis, NonSensitivePatient, Patient, newPatient } from '../types';
 import { v1 as uuid } from 'uuid';
 
-const diagnoses: Diagnose[] = diagnosesData;
+const diagnoses: Diagnosis[] = diagnosesData;
 let patients: Patient[] = patientData;
 
 const getDiagnoses = () => {
@@ -19,7 +14,12 @@ const getPatients = () => {
   return patients;
 };
 
-const getNonSensitiveDataOfPatients = (): NonSensitiveDataPatient[] => {
+const getPatient = (id: string): Patient | undefined => {
+  const patientFound = patients.find((patient) => patient.id === id);
+  return patientFound;
+};
+
+const getNonSensitiveDataOfPatients = (): NonSensitivePatient[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
     id,
     name,
@@ -40,4 +40,5 @@ export default {
   getPatients,
   getNonSensitiveDataOfPatients,
   addPatient,
+  getPatient,
 };
