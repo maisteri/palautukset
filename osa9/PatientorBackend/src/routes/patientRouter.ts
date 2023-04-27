@@ -1,6 +1,6 @@
 import express from 'express';
 import dataService from '../services/dataService';
-import { parseNewPatient } from '../utils';
+import { parseNewPatient, parseNewPatientEntry } from '../utils';
 
 const router = express.Router();
 
@@ -14,6 +14,15 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const newEntry = dataService.addPatient(parseNewPatient(req.body));
+  res.status(204).json(newEntry);
+});
+
+router.post('/:id/entries', (req, res) => {
+  console.log(parseNewPatientEntry(req.body));
+  const newEntry = dataService.addPatientEntry(
+    req.params.id,
+    parseNewPatientEntry(req.body)
+  );
   res.status(204).json(newEntry);
 });
 
