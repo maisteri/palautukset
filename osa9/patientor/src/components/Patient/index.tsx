@@ -1,24 +1,27 @@
 import { Diagnosis, Patient } from '../../types';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import patientService from '../../services/patients';
 import diagnosesService from '../../services/diagnoses';
-import EntryDetails from '../EntryDetails';
+import EntryDetails from './EntryDetails';
+import NewEntryForm from './NewEntryForm';
+import Notification from '../Notification';
 
 const PatientCard = () => {
   const [patient, setPatient] = useState<Patient>();
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
+  const [notificationMessage, setNotificationMessage] = useState('');
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
-        const data = await patientService.getOne(id);
-        setPatient(data);
+        const patientData = await patientService.getOne(id);
+        setPatient(patientData);
       }
-      const data2 = await diagnosesService.getAll();
-      setDiagnoses(data2);
+      const diagnosesData = await diagnosesService.getAll();
+      setDiagnoses(diagnosesData);
     };
     void fetchData();
   }, [id]);
@@ -27,34 +30,42 @@ const PatientCard = () => {
     return null;
   }
 
+  console.log(patient);
+
   return (
-    <Card>
-      <CardContent>
-        <Typography gutterBottom variant='h5' component='div'>
-          {patient.name}
-        </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          SSN: {patient.ssn}
-        </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          DoB: {patient.dateOfBirth}
-        </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          Gender: {patient.gender}
-        </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          Occuopation: {patient.occupation}
-        </Typography>
-        <Typography gutterBottom variant='h6' component='div'>
-          entries
-        </Typography>
-        {patient.entries.map((entry) => {
-          return (
-            <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
-          );
-        })}
-      </CardContent>
-    </Card>
+    <Box sx={{ margin: '20px 20px 20px 0px' }}>
+      <Typography gutterBottom variant='h5' component='div'>
+        {patient.name}
+      </Typography>
+      <Typography variant='body2' color='text.secondary'>
+        SSN: {patient.ssn}
+      </Typography>
+      <Typography variant='body2' color='text.secondary'>
+        DoB: {patient.dateOfBirth}
+      </Typography>
+      <Typography variant='body2' color='text.secondary'>
+        Gender: {patient.gender}
+      </Typography>
+      <Typography variant='body2' color='text.secondary'>
+        Occuopation: {patient.occupation}
+      </Typography>
+      <Notification message={notificationMessage} />
+      <NewEntryForm
+        diagnoses={diagnoses}
+        patient={patient}
+        setPatient={setPatient}
+        setNotificationMessage={setNotificationMessage}
+      />
+
+      <Typography gutterBottom variant='h6' component='div'>
+        entries
+      </Typography>
+      {patient.entries.map((entry) => {
+        return (
+          <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
+        );
+      })}
+    </Box>
   );
 };
 

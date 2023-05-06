@@ -14,16 +14,26 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const newEntry = dataService.addPatient(parseNewPatient(req.body));
-  res.status(204).json(newEntry);
+  res.status(201).json(newEntry);
 });
 
 router.post('/:id/entries', (req, res) => {
-  console.log(parseNewPatientEntry(req.body));
-  const newEntry = dataService.addPatientEntry(
-    req.params.id,
-    parseNewPatientEntry(req.body)
-  );
-  res.status(204).json(newEntry);
+  try {
+    const newEntry = dataService.addPatientEntry(
+      req.params.id,
+      parseNewPatientEntry(req.body)
+    );
+    return res.status(201).json(newEntry);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        error: `malformatted parameters: ${error.message}`,
+      });
+    }
+    return res.status(400).json({
+      error: `unknown error`,
+    });
+  }
 });
 
 export default router;

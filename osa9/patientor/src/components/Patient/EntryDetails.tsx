@@ -1,13 +1,12 @@
 import { Diagnosis, Entry, Entrytype } from '../../types';
 import { Card, CardContent } from '@mui/material';
 
-const EntryDetails = ({
-  entry,
-  diagnoses,
-}: {
+interface Props {
   entry: Entry;
   diagnoses: Diagnosis[];
-}) => {
+}
+
+const EntryDetails = ({ entry, diagnoses }: Props) => {
   const assertNever = (value: never): never => {
     throw new Error(
       `Unhandled discriminated union member: ${JSON.stringify(value)}`

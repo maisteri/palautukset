@@ -43,14 +43,13 @@ const isEntryType = (parameter: string): parameter is Entrytype => {
 const isHealthCheckRating = (
   parameter: number
 ): parameter is HealthCheckRating => {
-  console.log('these should be numbers', Object.values(HealthCheckRating));
   return Object.values(HealthCheckRating).includes(parameter);
 };
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
   if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
     // we will just trust the data to be in correct form
-    return [] as Array<Diagnosis['code']>;
+    return object as Array<Diagnosis['code']>;
   }
 
   return object.diagnosisCodes as Array<Diagnosis['code']>;
@@ -58,7 +57,7 @@ const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
 
 const parseGender = (parameter: unknown): Gender => {
   if (!isString(parameter) || !isGender(parameter)) {
-    throw new Error('Incorrect or missing data');
+    throw new Error(`Incorrect or missing data: Gender: ${parameter}`);
   }
   return parameter;
 };
@@ -77,7 +76,7 @@ const parseSickLeave = (object: unknown): SickLeave => {
       };
     }
   }
-  throw new Error('Incorrect or missing data');
+  throw new Error(`Incorrect or missing data: SickLeave`);
 };
 
 const parseDischarge = (object: unknown): Discharge => {
@@ -94,7 +93,7 @@ const parseDischarge = (object: unknown): Discharge => {
       };
     }
   }
-  throw new Error('Incorrect or missing data');
+  throw new Error(`Incorrect or missing data: Discharge`);
 };
 
 const parseEntryType = (parameter: unknown): Entrytype => {
@@ -106,7 +105,9 @@ const parseEntryType = (parameter: unknown): Entrytype => {
 
 const parseHealthCheckRating = (parameter: unknown): HealthCheckRating => {
   if (!isNumber(parameter) || !isHealthCheckRating(parameter)) {
-    throw new Error('Incorrect or missing data');
+    throw new Error(
+      `Incorrect or missing data: HealthCheckRating: ${parameter}`
+    );
   }
   return parameter;
 };
