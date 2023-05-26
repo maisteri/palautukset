@@ -3,13 +3,14 @@ import {
   newPatient,
   Diagnosis,
   HealthCheckRating,
-  Entrytype,
   newHealthCheckEntry,
   newHospitalEntry,
   newOccupationalHealthcareEntry,
   EntryWithoutId,
+  Entrytype,
   Discharge,
   SickLeave,
+  newBaseEntry,
 } from './types';
 
 const parseString = (parameter: unknown): string => {
@@ -35,9 +36,11 @@ const isGender = (parameter: string): parameter is Gender => {
 };
 
 const isEntryType = (parameter: string): parameter is Entrytype => {
-  return Object.values(Entrytype)
-    .map((x) => x.toString())
-    .includes(parameter);
+  return (
+    parameter === 'HealthCheck' ||
+    parameter === 'OccupationalHealthcare' ||
+    parameter === 'Hospital'
+  );
 };
 
 const isHealthCheckRating = (
@@ -121,10 +124,9 @@ export const parseNewPatientEntry = (object: unknown): EntryWithoutId => {
     'description' in object &&
     'date' in object &&
     'specialist' in object &&
-    'type' in object &&
-    'healthCheckRating' in object
+    'type' in object
   ) {
-    const newPatientEntry: newHealthCheckEntry = {
+    const newPatientBaseEntry: newBaseEntry = {
       description: parseString(object.description),
       specialist: parseString(object.specialist),
       date: parseString(object.date),
@@ -132,56 +134,47 @@ export const parseNewPatientEntry = (object: unknown): EntryWithoutId => {
         'diagnosisCodes' in object
           ? parseDiagnosisCodes(object.diagnosisCodes)
           : [],
-      type: parseEntryType(object.type),
-      healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
     };
-    return newPatientEntry;
-  }
 
-  if (
-    'description' in object &&
-    'date' in object &&
-    'specialist' in object &&
-    'type' in object &&
-    'discharge' in object
-  ) {
-    const newPatientEntry: newHospitalEntry = {
-      description: parseString(object.description),
-      specialist: parseString(object.specialist),
-      date: parseString(object.date),
-      diagnosisCodes:
-        'diagnosisCodes' in object
-          ? parseDiagnosisCodes(object.diagnosisCodes)
-          : undefined,
-      type: parseEntryType(object.type),
-      discharge: parseDischarge(object.discharge),
-    };
-    return newPatientEntry;
-  }
+    switch (parseEntryType(object.type)) {
+      case 'HealthCheck':
+        if ('healthCheckRating' in object) {
+          const newPatientEntry: newHealthCheckEntry = {
+            ...newPatientBaseEntry,
+            type: 'HealthCheck',
+            healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
+          };
+          return newPatientEntry;
+        }
+        throw new Error('Incorrect data: some fields are missing');
 
-  if (
-    'description' in object &&
-    'date' in object &&
-    'specialist' in object &&
-    'type' in object &&
-    'employerName' in object
-  ) {
-    const newPatientEntry: newOccupationalHealthcareEntry = {
-      description: parseString(object.description),
-      specialist: parseString(object.specialist),
-      date: parseString(object.date),
-      diagnosisCodes:
-        'diagnosisCodes' in object
-          ? parseDiagnosisCodes(object.diagnosisCodes)
-          : [],
-      type: parseEntryType(object.type),
-      employerName: parseString(object.employerName),
-      sickLeave:
-        'sickLeave' in object ? parseSickLeave(object.sickLeave) : undefined,
-    };
-    return newPatientEntry;
-  }
+      case 'Hospital':
+        if ('discharge' in object) {
+          const newPatientEntry: newHospitalEntry = {
+            ...newPatientBaseEntry,
+            type: 'Hospital',
+            discharge: parseDischarge(object.discharge),
+          };
+          return newPatientEntry;
+        }
+        throw new Error('Incorrect data: some fields are missing');
 
+      case 'OccupationalHealthcare':
+        if ('employerName' in object) {
+          const newPatientEntry: newOccupationalHealthcareEntry = {
+            ...newPatientBaseEntry,
+            type: 'OccupationalHealthcare',
+            employerName: parseString(object.employerName),
+            sickLeave:
+              'sickLeave' in object
+                ? parseSickLeave(object.sickLeave)
+                : undefined,
+          };
+          return newPatientEntry;
+        }
+        throw new Error('Incorrect data: some fields are missing');
+    }
+  }
   throw new Error('Incorrect data: some fields are missing');
 };
 

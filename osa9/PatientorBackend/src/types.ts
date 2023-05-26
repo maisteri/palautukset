@@ -27,11 +27,13 @@ export interface SickLeave {
   endDate: string;
 }
 
-export enum Entrytype {
-  HealthCheck = 'HealthCheck',
-  OccupationalHealthcare = 'OccupationalHealthcare',
-  Hospital = 'Hospital',
-}
+// export enum Entrytype {
+//   HealthCheck = 'HealthCheck',
+//   OccupationalHealthcare = 'OccupationalHealthcare',
+//   Hospital = 'Hospital',
+// }
+
+export type Entrytype = 'HealthCheck' | 'OccupationalHealthcare' | 'Hospital';
 
 export interface BaseEntry {
   id: string;
@@ -43,18 +45,18 @@ export interface BaseEntry {
 
 export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
-  type: Entrytype;
+  type: 'HealthCheck';
 }
 
 export interface HospitalEntry extends BaseEntry {
   discharge: Discharge;
-  type: Entrytype;
+  type: 'Hospital';
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
   employerName: string;
   sickLeave?: SickLeave;
-  type: Entrytype;
+  type: 'OccupationalHealthcare';
 }
 
 export type Entry =
