@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "dev": "ts-node-dev ./src/index.ts",
     "lint": "eslint --ext .ts ./src",
-    "start": "node ./build/index.js"
+    "start": "node ./build/src/index.js"
   },
   "author": "Atte Kivisto",
   "license": "ISC",
@@ -28,3 +28,4 @@
     "uuid": "^9.0.0"
   }
 }
+
